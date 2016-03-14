@@ -1,0 +1,38 @@
+AMT_SALE=(AMT_SALE/CNT)*(CNT-@reject_cnt),        # 退货金额 -
+# 退货运费金额不需要更新
+#AMT_DLVY=((AMT_DLVY - vRETURN_FREIGHT_AMOUNT)/CNT)*(CNT-@reject_cnt),
+AMT_DLVY = AMT_DLVY - vRETURN_FREIGHT_AMOUNT,#运费金额 -
+AMT_RCV=(AMT_RCV/CNT)*(CNT-@reject_cnt),#应收金额 -
+AMT_PMT=(AMT_PMT/CNT)*(CNT-@reject_cnt),#促销满减金额  -
+AMT_PMT_SND=(AMT_PMT_SND/CNT)*(CNT-@reject_cnt),#促销满赠金额 -
+AMT_OTVOUCH=(AMT_OTVOUCH/CNT)*(CNT-@reject_cnt),#第三方抵用券金额 -
+AMT_REBATE=(AMT_REBATE/CNT)*(CNT-@reject_cnt),#返利金额  -
+AMT_VACCT=(AMT_VACCT/CNT)*(CNT-@reject_cnt),#虚拟账户支付金额 -
+AMT_VOUCH=(AMT_VOUCH/CNT)*(CNT-@reject_cnt),#抵用券金额 -
+
+
+
+DECLARE `AMT_SALE_TMP`   DECIMAL(11,4);   REFUND_AMOUNT
+DECLARE `AMT_DLVY_TMP`   DECIMAL(11,4);   FREIGHT_AMOUNT
+DECLARE `AMT_RCV_TMP`   DECIMAL(11,4);
+DECLARE `AMT_PMT_TMP`   DECIMAL(11,4);	PROMOTION_REDUCE
+DECLARE `AMT_PMT_SND_TMP`   DECIMAL(11,4);	
+DECLARE `AMT_OTVOUCH_TMP`   DECIMAL(11,4);
+DECLARE `AMT_REBATE_TMP`   DECIMAL(11,4);
+DECLARE `AMT_VACCT_TMP`   DECIMAL(11,4);
+DECLARE `AMT_VOUCH_TMP`   DECIMAL(11,4);
+
+
+SELECT
+			round(T.REFUND_AMOUNT,3)  refundAmount,退款金额
+			round(IFNULL(t.REBATE_REFUND_AMOUNT,0),2) rebateAmount,返利退款金额
+	  		round(IFNULL(t.DISCOUNT_AMOUNT,0),2) discountAmount,促销满减
+		  	round(IFNULL(t.VIRTUAL_ACCOUNT_AMOUNT,0),2)  virtualAccountAmount,  虚拟帐户退款金额
+			round(IFNULL(t.FREIGHT_AMOUNT,0),2)  postFee,运费金额
+			round(IFNULL(T.VOUCHER_AMOUNT,0),2) voucherAmount,分摊抵用券金额
+			into(AMT_SALE_TMP,AMT_REBATE_TMP,AMT_PMT_TMP,AMT_VACCT_TMP,AMT_DLVY_TMP,AMT_VOUCH_TMP)
+		FROM ass_rma_refund_order  T 
+		
+		
+		
+DO编号	商品编码	税率	运费	实际未税销售额	销项税额	实际销售额	未税成本	含税成本	业务模式
